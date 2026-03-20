@@ -1,0 +1,29 @@
+import { Routes, Route, Navigate } from 'react-router-dom'
+import Sidebar from './components/layout/Sidebar.jsx'
+import Header from './components/layout/Header.jsx'
+import Dashboard from './components/Dashboard/Dashboard.jsx'
+import PersonaBuilder from './components/PersonaBuilder/PersonaBuilder.jsx'
+import BirthrightManager from './components/Birthright/BirthrightManager.jsx'
+import EmployeeList from './components/Employees/EmployeeList.jsx'
+import FileUploader from './components/FileUploader/FileUploader.jsx'
+
+export default function App() {
+  return (
+    <div className="flex h-screen overflow-hidden bg-gray-50">
+      <Sidebar />
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <Header />
+        <main className="flex-1 overflow-y-auto p-6">
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/personas" element={<PersonaBuilder />} />
+            <Route path="/birthright" element={<BirthrightManager />} />
+            <Route path="/employees" element={<EmployeeList />} />
+            <Route path="/upload" element={<FileUploader />} />
+          </Routes>
+        </main>
+      </div>
+    </div>
+  )
+}
