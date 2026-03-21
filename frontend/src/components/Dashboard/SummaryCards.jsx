@@ -55,7 +55,7 @@ export default function SummaryCards({ summary }) {
       icon: ExclamationTriangleIcon,
       label: 'Outlier Adjustments',
       value: fmt(summary.outlier_total),
-      sub: `${summary.total_employees ? Math.round(summary.outlier_total / summary.total_annual_tco * 100) : 0}% of TCO`,
+      sub: `Individually approved tools outside standard role bundles · ${summary.total_employees ? Math.round(summary.outlier_total / summary.total_annual_tco * 100) : 0}% of TCO`,
       color: 'bg-amber-500',
     },
   ]

@@ -8,7 +8,7 @@ import ExportPDF from '../Reports/ExportPDF.jsx'
 import PersonaDetailPanel from '../PersonaDetail/PersonaDetailPanel.jsx'
 import CategoryDrillPanel from '../CategoryDrill/CategoryDrillPanel.jsx'
 import EmployeeRowExpand from './EmployeeRowExpand.jsx'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline'
 
 const fmt = (n) =>
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n)
@@ -142,7 +142,15 @@ export default function Dashboard() {
                   <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Persona</th>
                   <th className="hidden lg:table-cell text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Birthright</th>
                   <th className="hidden lg:table-cell text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Persona Cost</th>
-                  <th className="hidden md:table-cell text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Outliers</th>
+                  <th className="hidden md:table-cell text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wide">
+                    <span className="flex items-center gap-1">
+                      Outliers
+                      <QuestionMarkCircleIcon
+                        className="w-3.5 h-3.5 text-gray-400 cursor-help"
+                        title="Individually approved tools outside this employee's standard role bundle — e.g. a Bloomberg Terminal for one analyst, or a specialised licence approved by their manager."
+                      />
+                    </span>
+                  </th>
                   <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Total</th>
                 </tr>
               </thead>

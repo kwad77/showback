@@ -10,10 +10,15 @@ function ItemSection({ title, items, variant }) {
 
   return (
     <div className="flex-1 min-w-[180px]">
-      <div className={`flex items-center gap-1.5 mb-2 ${isOutlier ? 'text-amber-700' : 'text-gray-700'}`}>
+      <div className={`flex items-center gap-1.5 mb-1 ${isOutlier ? 'text-amber-700' : 'text-gray-700'}`}>
         {isOutlier && <ExclamationTriangleIcon className="w-3.5 h-3.5" />}
         <p className="text-xs font-semibold uppercase tracking-wide">{title}</p>
       </div>
+      {isOutlier && (
+        <p className="text-xs text-amber-500 mb-2">
+          Tools approved for this person specifically — not part of their standard role bundle.
+        </p>
+      )}
       <ul className="space-y-1">
         {items.map((item) => (
           <li key={item.name} className={`flex items-start justify-between gap-2 text-xs ${isOutlier ? 'text-amber-700' : 'text-gray-600'}`}>

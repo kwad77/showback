@@ -191,9 +191,11 @@ export default function PersonaDetailPanel({ persona, personaName, onClose }) {
               <div className="flex items-center gap-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">
                 <ExclamationTriangleIcon className="w-4 h-4 shrink-0" />
                 <span>
-                  {outlier_count} {outlier_count === 1 ? 'employee has' : 'employees have'} individual outlier adjustments
-                  totalling {fmt(totalOutlierAdj)} (avg {fmt(outlier_avg)} each).
-                  Click a row to expand.
+                  <strong>Outliers</strong> are tools approved for specific employees that fall outside this persona's standard bundle —
+                  think a Bloomberg Terminal for one analyst, or a specialised licence a manager signed off on.{' '}
+                  {outlier_count} {outlier_count === 1 ? 'person in this persona has' : 'people in this persona have'} them,
+                  adding {fmt(totalOutlierAdj)} in total (avg {fmt(outlier_avg)} each).
+                  Expand a row below to see the details.
                 </span>
               </div>
             )}
