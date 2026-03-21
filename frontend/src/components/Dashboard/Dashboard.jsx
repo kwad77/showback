@@ -137,11 +137,13 @@ export default function Dashboard() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100">
-                  {['Employee', 'Department', 'Persona', 'Birthright', 'Persona Cost', 'Outliers', 'Total Annual'].map((h) => (
-                    <th key={h} className="text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wide">
-                      {h}
-                    </th>
-                  ))}
+                  <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Employee</th>
+                  <th className="hidden sm:table-cell text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Department</th>
+                  <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Persona</th>
+                  <th className="hidden lg:table-cell text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Birthright</th>
+                  <th className="hidden lg:table-cell text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Persona Cost</th>
+                  <th className="hidden md:table-cell text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Outliers</th>
+                  <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Total</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -152,14 +154,14 @@ export default function Dashboard() {
                       onClick={() => handleEmployeeRowClick(emp.employee_id)}
                     >
                       <td className="py-2.5 px-3 font-medium text-gray-900">{emp.employee_name}</td>
-                      <td className="py-2.5 px-3 text-gray-500">{emp.department ?? '—'}</td>
+                      <td className="hidden sm:table-cell py-2.5 px-3 text-gray-500">{emp.department ?? '—'}</td>
                       <td className="py-2.5 px-3">
-                        <span className="badge bg-brand-50 text-brand-700">{emp.persona_name}</span>
+                        <span className="badge bg-brand-50 text-brand-700 whitespace-nowrap">{emp.persona_name}</span>
                       </td>
-                      <td className="py-2.5 px-3 text-gray-600">{fmt(emp.birthright_annual)}</td>
-                      <td className="py-2.5 px-3 text-gray-600">{fmt(emp.persona_annual)}</td>
-                      <td className="py-2.5 px-3 text-amber-600">{fmt(emp.outlier_annual)}</td>
-                      <td className="py-2.5 px-3 font-semibold text-gray-900">{fmt(emp.total_annual)}</td>
+                      <td className="hidden lg:table-cell py-2.5 px-3 text-gray-600">{fmt(emp.birthright_annual)}</td>
+                      <td className="hidden lg:table-cell py-2.5 px-3 text-gray-600">{fmt(emp.persona_annual)}</td>
+                      <td className="hidden md:table-cell py-2.5 px-3 text-amber-600">{fmt(emp.outlier_annual)}</td>
+                      <td className="py-2.5 px-3 font-semibold text-gray-900 whitespace-nowrap">{fmt(emp.total_annual)}</td>
                     </tr>
                     {expandedEmployee === emp.employee_id && (
                       <tr>

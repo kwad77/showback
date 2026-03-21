@@ -43,18 +43,18 @@ export default function TCOByDepartment({ data = [], onDepartmentClick }) {
         <p className="text-xs text-gray-400 mt-0.5">Click a bar to filter the employee table by department</p>
       </div>
       <ResponsiveContainer width="100%" height={260}>
-        <BarChart data={chartData} layout="vertical" margin={{ left: 8, right: 16 }} style={{ cursor: 'pointer' }}>
+        <BarChart data={chartData} layout="vertical" margin={{ left: 4, right: 12 }} style={{ cursor: 'pointer' }}>
           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
           <XAxis
             type="number"
             tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`}
-            tick={{ fontSize: 11 }}
+            tick={{ fontSize: 10 }}
           />
           <YAxis
             type="category"
             dataKey="name"
-            width={90}
-            tick={{ fontSize: 11 }}
+            width={80}
+            tick={{ fontSize: 10 }}
           />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f5f3ff' }} />
           <Bar

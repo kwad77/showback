@@ -173,7 +173,7 @@ export default function CategoryDrillPanel({ category, items = [], categoryTotal
       />
 
       {/* Slide-over panel */}
-      <div className="fixed right-0 top-0 h-full w-full max-w-[480px] bg-white shadow-2xl z-50 flex flex-col overflow-hidden">
+      <div className="fixed right-0 top-0 h-full w-full sm:max-w-[480px] bg-white shadow-2xl z-50 flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <div>
