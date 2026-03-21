@@ -251,6 +251,72 @@ const by_category = Object.entries(catMap).map(([category, total_annual]) => ({
   percentage: Math.round(total_annual / total_annual_tco * 100),
 }))
 
+// ── by_category_detail ──────────────────────────────────────────────────────
+// Per-category list of individual cost items with source annotations.
+// Used by the TCO by Category drill-down panel.
+const empCountByPersonaName = Object.fromEntries(
+  Object.entries(personaEmployeeMap).map(([p, emps]) => [p, emps.length])
+)
+
+const _rawDetailItems = [
+  // Birthright — applies to all 53 employees
+  ...BIRTHRIGHT_ITEMS.map(item => ({
+    name:           item.name,
+    vendor:         item.vendor,
+    category:       item.category,
+    cost_per:       item.annual_cost,
+    employee_count: 53,
+    annual_total:   item.annual_cost * 53,
+    source_type:    'Birthright',
+    source_label:   'Birthright — All Employees',
+  })),
+  // Persona-assigned items
+  ...Object.entries(PERSONAS).flatMap(([pName, def]) => {
+    const count = empCountByPersonaName[pName] ?? 0
+    return def.items.map(item => ({
+      name:           item.name,
+      vendor:         item.vendor,
+      category:       item.category,
+      cost_per:       item.annual_cost,
+      employee_count: count,
+      annual_total:   item.annual_cost * count,
+      source_type:    'Persona',
+      source_label:   pName,
+    }))
+  }),
+]
+
+// Aggregate outlier items by name
+const _outlierAgg = {}
+for (const [, , , , outliers] of RAW_EMPLOYEES) {
+  if (!outliers) continue
+  for (const o of outliers) {
+    if (!_outlierAgg[o.name]) {
+      _outlierAgg[o.name] = {
+        name:           o.name,
+        vendor:         o.vendor ?? '',
+        category:       o.category,
+        cost_per:       o.annual_cost,
+        employee_count: 0,
+        annual_total:   0,
+        source_type:    'Outlier',
+        source_label:   'Individual outlier adjustment',
+      }
+    }
+    _outlierAgg[o.name].employee_count += 1
+    _outlierAgg[o.name].annual_total   += o.annual_cost
+  }
+}
+
+const by_category_detail = {}
+for (const item of [..._rawDetailItems, ...Object.values(_outlierAgg)]) {
+  if (!by_category_detail[item.category]) by_category_detail[item.category] = []
+  by_category_detail[item.category].push(item)
+}
+for (const cat of Object.keys(by_category_detail)) {
+  by_category_detail[cat].sort((a, b) => b.annual_total - a.annual_total)
+}
+
 // ── MOCK_TCO_SUMMARY ────────────────────────────────────────────────────────
 export const MOCK_TCO_SUMMARY = {
   total_employees:      53,
@@ -262,6 +328,7 @@ export const MOCK_TCO_SUMMARY = {
   by_domain,
   by_persona,
   by_category,
+  by_category_detail,
   employee_details,
 }
 

@@ -6,6 +6,7 @@ import TCOByDepartment from './TCOByDepartment.jsx'
 import TCOByPersona from './TCOByPersona.jsx'
 import ExportPDF from '../Reports/ExportPDF.jsx'
 import PersonaDetailPanel from '../PersonaDetail/PersonaDetailPanel.jsx'
+import CategoryDrillPanel from '../CategoryDrill/CategoryDrillPanel.jsx'
 import EmployeeRowExpand from './EmployeeRowExpand.jsx'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
@@ -23,6 +24,7 @@ export default function Dashboard() {
   } = useApp()
 
   const [selectedPersona,   setSelectedPersona]   = useState(null)
+  const [selectedCategory,  setSelectedCategory]  = useState(null)
   const [deptFilter,        setDeptFilter]         = useState(null)
   const [expandedEmployee,  setExpandedEmployee]   = useState(null)
   const [bannerDismissed,   setBannerDismissed]    = useState(false)
@@ -97,7 +99,10 @@ export default function Dashboard() {
 
       {/* Charts — 2-column grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <TCOByCategory data={tcoSummary?.by_category ?? []} />
+        <TCOByCategory
+          data={tcoSummary?.by_category ?? []}
+          onCategoryClick={tcoSummary?.by_category_detail ? setSelectedCategory : undefined}
+        />
         <TCOByPersona
           data={tcoSummary?.by_persona ?? []}
           onPersonaClick={(personaName) => setSelectedPersona(personaName)}
@@ -179,6 +184,16 @@ export default function Dashboard() {
         persona={personaDetails?.[selectedPersona]}
         personaName={selectedPersona}
         onClose={() => setSelectedPersona(null)}
+      />
+
+      {/* Category drill-down slide-over */}
+      <CategoryDrillPanel
+        category={selectedCategory}
+        items={tcoSummary?.by_category_detail?.[selectedCategory] ?? []}
+        categoryTotal={
+          tcoSummary?.by_category?.find((c) => c.category === selectedCategory)?.total_annual ?? 0
+        }
+        onClose={() => setSelectedCategory(null)}
       />
     </div>
   )
