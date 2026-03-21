@@ -1,5 +1,10 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import { personas as personasApi, costObjects as costObjectsApi, birthright as birthrightApi, reports } from '../services/api.js'
+import {
+  MOCK_TCO_SUMMARY,
+  MOCK_PERSONA_DETAILS,
+  MOCK_EMPLOYEE_LINE_ITEMS,
+} from '../data/mockData'
 
 const AppContext = createContext(null)
 
@@ -10,6 +15,10 @@ export function AppProvider({ children }) {
   const [tcoSummary, setTcoSummary]   = useState(null)
   const [loading, setLoading]         = useState(false)
   const [error, setError]             = useState(null)
+  const [demoMode, setDemoMode]       = useState(false)
+
+  const [personaDetails]     = useState(MOCK_PERSONA_DETAILS)
+  const [employeeLineItems]  = useState(MOCK_EMPLOYEE_LINE_ITEMS)
 
   const fetchAll = useCallback(async () => {
     setLoading(true)
@@ -35,8 +44,15 @@ export function AppProvider({ children }) {
       const summary = await reports.tcoSummary()
       setTcoSummary(summary)
     } catch {
-      // TCO summary is optional — silently fail if no employees yet
+      // API unavailable — activate demo mode with mock data
+      setDemoMode(true)
+      setTcoSummary(MOCK_TCO_SUMMARY)
     }
+  }, [])
+
+  const enableDemo = useCallback(() => {
+    setDemoMode(true)
+    setTcoSummary(MOCK_TCO_SUMMARY)
   }, [])
 
   useEffect(() => {
@@ -55,6 +71,10 @@ export function AppProvider({ children }) {
         error,
         refresh: fetchAll,
         refreshTCO: fetchTCO,
+        demoMode,
+        enableDemo,
+        personaDetails,
+        employeeLineItems,
       }}
     >
       {children}

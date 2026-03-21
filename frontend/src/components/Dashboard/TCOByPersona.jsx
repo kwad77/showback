@@ -20,7 +20,7 @@ const CustomTooltip = ({ active, payload, label }) => {
   )
 }
 
-export default function TCOByPersona({ data = [] }) {
+export default function TCOByPersona({ data = [], onPersonaClick }) {
   if (!data.length) {
     return (
       <div className="card flex items-center justify-center h-64 text-gray-400 text-sm">
@@ -31,11 +31,19 @@ export default function TCOByPersona({ data = [] }) {
 
   const chartData = data.map((d) => ({ ...d, name: d.persona_name }))
 
+  const handleBarClick = (chartPayload) => {
+    const personaName = chartPayload?.activePayload?.[0]?.payload?.persona_name
+    if (personaName) onPersonaClick?.(personaName)
+  }
+
   return (
     <div className="card">
-      <h3 className="text-base font-semibold text-gray-900 mb-4">TCO by Persona</h3>
+      <div className="mb-4">
+        <h3 className="text-base font-semibold text-gray-900">TCO by Persona</h3>
+        <p className="text-xs text-gray-400 mt-0.5">Click a bar to drill down into that persona</p>
+      </div>
       <ResponsiveContainer width="100%" height={260}>
-        <BarChart data={chartData} margin={{ left: 8, right: 16, bottom: 16 }}>
+        <BarChart data={chartData} margin={{ left: 8, right: 16, bottom: 16 }} onClick={handleBarClick} style={{ cursor: 'pointer' }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
           <XAxis dataKey="name" tick={{ fontSize: 11 }} />
           <YAxis
@@ -43,7 +51,7 @@ export default function TCOByPersona({ data = [] }) {
             tick={{ fontSize: 11 }}
           />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f5f3ff' }} />
-          <Bar dataKey="total_annual" radius={[4, 4, 0, 0]}>
+          <Bar dataKey="total_annual" radius={[4, 4, 0, 0]} cursor="pointer">
             {chartData.map((_, i) => (
               <Cell key={i} fill={COLORS[i % COLORS.length]} />
             ))}
