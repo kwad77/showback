@@ -13,6 +13,27 @@ const BIRTHRIGHT_ITEMS = [
   { name: 'Zscaler ZIA',      vendor: 'Zscaler',     category: 'Network', annual_cost: 120 },
 ]
 
+// ── Persona ID map (matches MOCK_PERSONAS ids below) ────────────────────────
+const PERSONA_IDS = {
+  'Software Engineer': 1,
+  'Sales Rep':         2,
+  'Marketing':         3,
+  'Finance Analyst':   4,
+  'HR Generalist':     5,
+  'Executive':         6,
+  'IT Operations':     7,
+}
+
+const PERSONA_DESCRIPTIONS = {
+  'Software Engineer': 'Developer tools: IDE, cloud sandbox, version control, and project management.',
+  'Sales Rep':         'Full sales stack: CRM, intelligence, call coaching, and contract management.',
+  'Marketing':         'Marketing automation, design, SEO, and content creation tools.',
+  'Finance Analyst':   'Reporting, expense management, and financial planning tools.',
+  'HR Generalist':     'HRIS, payroll, and recruiting tools for people operations.',
+  'Executive':         'Leadership-tier tools including board reporting and executive communication.',
+  'IT Operations':     'Infrastructure monitoring, automation, and ITSM tools.',
+}
+
 // ── Persona definitions ─────────────────────────────────────────────────────
 const PERSONAS = {
   'Software Engineer': {
@@ -205,6 +226,7 @@ for (const e of employee_details) {
 }
 const by_persona = Object.values(personaMap).map(p => ({
   ...p,
+  persona_id:       PERSONA_IDS[p.persona_name] ?? null,
   avg_per_employee: Math.round(p.total_annual / p.employee_count),
 }))
 
@@ -300,3 +322,59 @@ export const MOCK_PERSONA_DETAILS = Object.fromEntries(
     ]
   })
 )
+
+// ── MOCK_PERSONAS — full PersonaRead API shape ───────────────────────────────
+// Used to populate the Personas page in demo mode.
+let _coIdCounter = 100
+export const MOCK_PERSONAS = Object.entries(PERSONAS).map(([name, def]) => {
+  const id = PERSONA_IDS[name]
+  return {
+    id,
+    name,
+    color:       def.color,
+    icon:        def.icon,
+    description: PERSONA_DESCRIPTIONS[name] ?? '',
+    cost_objects: def.items.map(item => ({
+      id:        ++_coIdCounter,
+      name:      item.name,
+      vendor:    item.vendor,
+      category:  item.category,
+      cost:      item.cost,
+      frequency: item.frequency === 'monthly' ? 'Monthly' : item.frequency === 'one-time' ? 'One-time' : 'Annual',
+    })),
+    created_at: '2024-01-15T00:00:00Z',
+  }
+})
+
+// ── MOCK_EMPLOYEES — full EmployeeRead API shape ─────────────────────────────
+// Used to populate the Employees page in demo mode.
+export const MOCK_EMPLOYEES = RAW_EMPLOYEES.map(([id, name, dept, persona]) => {
+  const slug  = name.toLowerCase().replace(/[^a-z\s]/g, '').replace(/\s+/g, '.')
+  const pDef  = PERSONAS[persona]
+  const pid   = PERSONA_IDS[persona]
+  return {
+    id,
+    name,
+    email:      `${slug}@demo.company.com`,
+    department: dept,
+    location:   null,
+    persona_id: pid,
+    persona:    pDef ? { id: pid, name: persona, color: pDef.color } : null,
+  }
+})
+
+// ── MOCK_BIRTHRIGHT — full BirthrightRead API shape ──────────────────────────
+// Used to populate the Birthright page in demo mode.
+export const MOCK_BIRTHRIGHT = BIRTHRIGHT_ITEMS.map((item, i) => ({
+  id:             i + 1,
+  cost_object_id: i + 1,
+  is_active:      true,
+  cost_object: {
+    id:        i + 1,
+    name:      item.name,
+    vendor:    item.vendor,
+    category:  item.category,
+    cost:      Math.round(item.annual_cost / 12),
+    frequency: 'Monthly',
+  },
+}))

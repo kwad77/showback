@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { PlusIcon, TrashIcon, ShieldCheckIcon } from '@heroicons/react/24/outline'
+import { PlusIcon, TrashIcon, ShieldCheckIcon, CloudArrowDownIcon } from '@heroicons/react/24/outline'
 import { birthright as birthrightApi } from '../../services/api.js'
 import { useApp } from '../../context/AppContext.jsx'
 import clsx from 'clsx'
@@ -17,7 +17,7 @@ const CATEGORY_COLORS = {
 }
 
 export default function BirthrightManager() {
-  const { birthright, costObjects, refresh, tcoSummary } = useApp()
+  const { birthright, costObjects, refresh, tcoSummary, demoMode } = useApp()
   const [adding, setAdding]     = useState(false)
   const [selectedCO, setSelected] = useState('')
   const [saving, setSaving]     = useState(false)
@@ -63,6 +63,23 @@ export default function BirthrightManager() {
 
   return (
     <div className="max-w-3xl space-y-6">
+      {/* Demo integration banner */}
+      {demoMode && (
+        <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 flex items-start gap-3">
+          <CloudArrowDownIcon className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+          <div className="text-sm">
+            <p className="font-semibold text-blue-800">What is a Birthright item?</p>
+            <p className="text-blue-700 mt-0.5">
+              Birthright items are tools <strong>every employee gets on day one</strong>, regardless of role —
+              email, single sign-on, endpoint security, and VPN. They form your fixed-cost floor:
+              the minimum you spend per person before any role-specific tools are counted.
+              In production, this list can sync from your ITAM system (e.g. ServiceNow).
+              A connector stub is ready in <code className="font-mono text-xs bg-blue-100 px-1 rounded">backend/app/services/data_connector.py</code>.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Summary banner */}
       <div className="card bg-violet-50 border-violet-200 flex items-center gap-4">
         <ShieldCheckIcon className="w-8 h-8 text-violet-600 shrink-0" />

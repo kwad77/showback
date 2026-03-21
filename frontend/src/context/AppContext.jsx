@@ -4,6 +4,8 @@ import {
   MOCK_TCO_SUMMARY,
   MOCK_PERSONA_DETAILS,
   MOCK_EMPLOYEE_LINE_ITEMS,
+  MOCK_PERSONAS,
+  MOCK_BIRTHRIGHT,
 } from '../data/mockData'
 
 const AppContext = createContext(null)
@@ -47,12 +49,16 @@ export function AppProvider({ children }) {
       // API unavailable — activate demo mode with mock data
       setDemoMode(true)
       setTcoSummary(MOCK_TCO_SUMMARY)
+      setPersonas(MOCK_PERSONAS)
+      setBirthright(MOCK_BIRTHRIGHT)
     }
   }, [])
 
   const enableDemo = useCallback(() => {
     setDemoMode(true)
     setTcoSummary(MOCK_TCO_SUMMARY)
+    setPersonas(MOCK_PERSONAS)
+    setBirthright(MOCK_BIRTHRIGHT)
   }, [])
 
   useEffect(() => {

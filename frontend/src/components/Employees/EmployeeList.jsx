@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
-import { PlusIcon, PencilIcon, TrashIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import { useState, useEffect, useCallback } from 'react'
+import { PlusIcon, PencilIcon, TrashIcon, MagnifyingGlassIcon, CloudArrowDownIcon } from '@heroicons/react/24/outline'
 import { employees as employeesApi } from '../../services/api.js'
 import { useApp } from '../../context/AppContext.jsx'
+import { MOCK_EMPLOYEES } from '../../data/mockData.js'
 import clsx from 'clsx'
 
 const fmt = (n) =>
@@ -82,7 +83,7 @@ function EmployeeModal({ employee, personas, onClose, onSaved }) {
 }
 
 export default function EmployeeList() {
-  const { personas, tcoSummary, refreshTCO } = useApp()
+  const { personas, tcoSummary, refreshTCO, demoMode } = useApp()
   const [employees, setEmployees] = useState([])
   const [search, setSearch]       = useState('')
   const [deptFilter, setDeptFilter] = useState('')
@@ -90,12 +91,18 @@ export default function EmployeeList() {
   const [modalTarget, setModalTarget] = useState(null)  // null | 'new' | employee object
   const [deleteTarget, setDeleteTarget] = useState(null)
 
-  const load = async () => {
-    const data = await employeesApi.list()
-    setEmployees(data)
-  }
+  const load = useCallback(async () => {
+    if (demoMode) {
+      setEmployees(MOCK_EMPLOYEES)
+      return
+    }
+    try {
+      const data = await employeesApi.list()
+      setEmployees(data)
+    } catch { /* silently fail — API unreachable */ }
+  }, [demoMode])
 
-  useEffect(() => { load() }, [])
+  useEffect(() => { load() }, [load])
 
   const departments = [...new Set(employees.map((e) => e.department).filter(Boolean))].sort()
 
@@ -129,6 +136,21 @@ export default function EmployeeList() {
 
   return (
     <div className="space-y-4">
+      {/* Demo integration banner */}
+      {demoMode && (
+        <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 flex items-start gap-3">
+          <CloudArrowDownIcon className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+          <div className="text-sm">
+            <p className="font-semibold text-blue-800">Active Directory &amp; HRIS sync available</p>
+            <p className="text-blue-700 mt-0.5">
+              In production, this roster syncs automatically from Azure AD, Okta, or your HRIS (Workday, BambooHR).
+              New hires appear on day one; departures are flagged for license reclamation.
+              A connector stub is ready in <code className="font-mono text-xs bg-blue-100 px-1 rounded">backend/app/services/data_connector.py</code>.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative flex-1 min-w-48">

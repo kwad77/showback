@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { PlusIcon } from '@heroicons/react/24/outline'
+import { PlusIcon, CloudArrowDownIcon } from '@heroicons/react/24/outline'
 import { useApp } from '../../context/AppContext.jsx'
 import { personas as personasApi } from '../../services/api.js'
 import PersonaCard from './PersonaCard.jsx'
 import PersonaEditor from './PersonaEditor.jsx'
 
 export default function PersonaBuilder() {
-  const { personas, employees: _employees, refresh } = useApp()
+  const { personas, employees: _employees, refresh, demoMode } = useApp()
 
   // Build a quick employee-count-per-persona map from tcoSummary or just 0
   const { tcoSummary } = useApp()
@@ -41,6 +41,23 @@ export default function PersonaBuilder() {
 
   return (
     <div className="space-y-6">
+      {/* Demo integration banner */}
+      {demoMode && (
+        <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 flex items-start gap-3">
+          <CloudArrowDownIcon className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+          <div className="text-sm">
+            <p className="font-semibold text-blue-800">Role-based tool bundles — syncs with your identity provider</p>
+            <p className="text-blue-700 mt-0.5">
+              Each persona is a <strong>standard tool bundle for a job role</strong>. Assign a persona to an employee
+              and they inherit every tool in that bundle. When a tool price changes, update the persona once —
+              everyone in that role reprices automatically.
+              In production, persona assignment can sync from Azure AD groups or your HRIS job codes.
+              A connector stub is ready in <code className="font-mono text-xs bg-blue-100 px-1 rounded">backend/app/services/data_connector.py</code>.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Toolbar */}
       <div className="flex items-center justify-between">
         <div>
