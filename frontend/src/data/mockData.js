@@ -254,8 +254,9 @@ const by_category = Object.entries(catMap).map(([category, total_annual]) => ({
 // ── by_category_detail ──────────────────────────────────────────────────────
 // Per-category list of individual cost items with source annotations.
 // Used by the TCO by Category drill-down panel.
+// by_persona is already computed above — use it for counts
 const empCountByPersonaName = Object.fromEntries(
-  Object.entries(personaEmployeeMap).map(([p, emps]) => [p, emps.length])
+  by_persona.map((p) => [p.persona_name, p.employee_count])
 )
 
 const _rawDetailItems = [
